@@ -72,6 +72,12 @@ class _ChildWithChangesTransformer(CSTTransformer):
         return updated_node
 
 
+class ValidationVisitor(CSTVisitor):
+    def on_visit(self, node: "CSTNode") -> bool:
+        node.validate()
+        return True
+
+
 class _NOOPVisitor(CSTTransformer):
     pass
 
@@ -111,11 +117,6 @@ def _clone(val: object) -> object:
 class CSTNode(ABC):
     __slots__: ClassVar[Sequence[str]] = ()
 
-    def __post_init__(self) -> None:
-        # PERF: It might make more sense to move validation work into the visitor, which
-        # would allow us to avoid validating the tree when parsing a file.
-        self._validate()
-
     @classmethod
     def __init_subclass__(cls, **kwargs: Any) -> None:
         """
@@ -134,6 +135,15 @@ class CSTNode(ABC):
             cls.__eq__ = CSTNode.__eq__
         if "__hash__" not in cls.__dict__:
             cls.__hash__ = CSTNode.__hash__
+
+    def validate(self, deep: bool = False) -> None:
+        if deep:
+            # validate current node and children
+            validation_visitor = ValidationVisitor()
+            self.visit(validation_visitor)
+        else:
+            # validate only current node
+            self._validate()
 
     def _validate(self) -> None:
         """
