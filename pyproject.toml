@@ -3,7 +3,7 @@ requires = ["setuptools", "setuptools-scm", "setuptools-rust", "wheel"]
 
 [project]
 name = "libcst"
-description = "A concrete syntax tree with AST-like properties for Python 3.0 through 3.12 programs."
+description = "A concrete syntax tree with AST-like properties for Python 3.0 through 3.13 programs."
 readme = "README.rst"
 dynamic = ["version"]
 license = { file = "LICENSE" }
@@ -14,6 +14,7 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
 ]
 requires-python = ">=3.9"
 dependencies = ["pyyaml>=5.2"]
@@ -35,7 +36,7 @@ dev = [
     "pyre-check==0.9.18; platform_system != 'Windows'",
     "setuptools_scm>=6.0.1",
     "sphinx-rtd-theme>=0.4.3",
-    "ufmt==2.7.0",
+    "ufmt==2.7.3",
     "usort==1.0.8.post1",
     "setuptools-rust>=1.5.2",
     "slotscheck>=0.7.1",
