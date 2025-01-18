@@ -65,7 +65,7 @@ class TestCodegenClean(UnitTest):
         changed file. If this test fails, please run 'python -m libcst.codegen.generate all'
         to generate new files.
         """
-        new_code = clean_generated_code("\n".join(matcher_codegen.generated_code))
+        new_code = clean_generated_code("\n".join(matcher_codegen.generate_init()))
         new_file = os.path.join(
             os.path.dirname(os.path.abspath(__file__)), "matcher_codegen.deleteme.py"
         )

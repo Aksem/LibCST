@@ -107,16 +107,53 @@ def codegen_matchers() -> None:
         os.path.join(os.path.dirname(os.path.abspath(__file__)), "../")
     )
     matchers_file = os.path.join(base, "matchers/__init__.py")
-    new_code = clean_generated_code("\n".join(matcher_codegen.generated_code))
+    new_code = clean_generated_code("\n".join(matcher_codegen.generate_init()))
     with open(matchers_file, "w") as fp:
+        fp.write(new_code)
+        fp.close()
+
+    base_file = os.path.join(base, "matchers/_base.py")
+    new_code = clean_generated_code("\n".join(matcher_codegen.generate_base()))
+    with open(base_file, "w") as fp:
+        fp.write(new_code)
+        fp.close()
+
+    match_types_file = os.path.join(base, "matchers/_match_types.py")
+    new_code = clean_generated_code("\n".join(matcher_codegen.generate_match_types()))
+    with open(match_types_file, "w") as fp:
         fp.write(new_code)
         fp.close()
 
     # If it worked, lets format the file
     format_file(matchers_file)
+    format_file(base_file)
+    format_file(match_types_file)
 
     # Inform the user
     print(f"Successfully generated a new {matchers_file} file.")
+    print(f"Successfully generated a new {base_file} file.")
+    print(f"Successfully generated a new {match_types_file} file.")
+
+    # generate all nodes files
+    nodes_dir = os.path.join(base, "matchers/nodes")
+    try:
+        os.mkdir(nodes_dir)
+    except FileExistsError:
+        pass
+
+    nodes_codes = matcher_codegen.generate_nodes_matchers()
+    for node_name, new_code_lines in nodes_codes:
+        new_code = clean_generated_code("\n".join(new_code_lines))
+        node_file = os.path.join(nodes_dir, f"_{node_name}.py")
+        with open(node_file, "w") as fp:
+            fp.write(new_code)
+            fp.close()
+
+        # If it worked, lets format the file
+        format_file(node_file)
+
+        # Inform the user
+        print(f"Successfully generated a new {node_file} file.")
 
 
 def codegen_return_types() -> None:
