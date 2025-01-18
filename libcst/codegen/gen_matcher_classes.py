@@ -501,6 +501,9 @@ def generate_init():
     for base in typeclasses:
         all_exports.add(base.__name__)
 
+    base_nodes = ', '.join([base.__name__ for base in typeclasses])
+    generated_code.append(f"from libcst.matchers._base import {base_nodes}")
+
     for node in all_libcst_nodes:
         if node.__name__.startswith("Base"):
             continue
